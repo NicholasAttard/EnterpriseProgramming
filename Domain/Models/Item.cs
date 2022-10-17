@@ -15,6 +15,7 @@ namespace Domain.Models
     public class Item
     {
         [Key] //these attributes are for databse generation
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
         
         [StringLength(100)]
