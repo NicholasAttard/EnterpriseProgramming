@@ -27,7 +27,17 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Create(CreateItemViewModel data)
         {
-            itemsService.AddItem(data);
+            try
+            {
+                itemsService.AddItem(data);
+                //dynamic object - it builds the declared properties on-the-fly i.e the moment you declare the property
+                //"Message" it builds in realtime in memory
+                ViewBag.Message = "Item Successfully inserted in database";
+            }
+            catch (Exception ex) 
+            {
+                ViewBag.Error = "Item wasn't inserted Successfully. Please check your inputs!";
+            }
             return View();
         }
     }

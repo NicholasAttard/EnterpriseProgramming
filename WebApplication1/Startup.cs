@@ -1,4 +1,6 @@
+using BusinessLogic.Services;
 using DataAccess.Context;
+using DataAccess.Repositories;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -35,6 +37,29 @@ namespace WebApplication1
                 .AddEntityFrameworkStores<ShoppingCartContext>();
             services.AddControllersWithViews();
             services.AddRazorPages();
+
+            //In this invertion of Control class, we are going to let it know what instances may be asked at a longer stage to be created here
+            //the Startup.cs needs to know the life expectancy the service class needs to be created with
+
+            //Transient
+            //Scoped
+            //Singleton
+
+            /*
+                Singleton: IoC container will create and share a single instance of a service throughout the application's lifetime. 
+                i.e if there are 50 users browsing your website, only one instance will be created and shared among all the users.
+             */
+            /*
+                Transient: IoC will create a new instance of the spedcified service tyoe every time you ask for it.
+                eg: if there are 50 users and there is a request for ItemService, then 50 instances will be created
+                eg: if there are 50 users and there are 2 calls for ItemsRepository (within ItemService), then 50*2 instances are created
+             */
+            /*
+                Scope:IoC will create an instance of the specified service type once per request and will be shared in a single request
+                eg:if there are 50 users and there is 2 calls for ItemsRepository (within the ItemService), then 50*1 instances of ItemRepository
+             */
+            services.AddScoped<ItemsServices>();
+            services.AddScoped<ItemsRepository>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
