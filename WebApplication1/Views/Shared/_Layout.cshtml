@@ -36,13 +36,30 @@
             {
                 <div class="alert alert-primary" role="alert">
                     @ViewBag.Message
-                </div>            }
+                </div>
+            }
 
             @if (ViewBag.Message != null)
             {
                 <div class="alert alert-danger" role="alert">
                     @ViewBag.Error
-                </div>            }
+                </div>           
+            }
+
+
+            @if (TempData["message"] != null)
+            {
+                <div class="alert alert-primary" role="alert">
+                    @TempData["message"].ToString()
+                </div>}
+            }
+
+            @if (TempData["error"] != null)
+            {
+                <div class="alert alert-danger" role="alert">
+                    @TempData["error"].ToString()
+                </div>}
+            }
             @RenderBody()
         </main>
     </div>

@@ -16,7 +16,7 @@ namespace WebApplication1.Controllers
         public ItemsServices itemsService;
         private IWebHostEnvironment host;
         private CategoriesServices categoriesServices;
-        public ItemsController(ItemsServices _itemsService, IWebHostEnvironment _host,CategoriesServices _categoriesServices) 
+        public ItemsController(ItemsServices _itemsService, IWebHostEnvironment _host, CategoriesServices _categoriesServices)
         {
             itemsService = _itemsService;
             host = _host;
@@ -24,7 +24,7 @@ namespace WebApplication1.Controllers
         }
         //A mthod to open the page
         [HttpGet]
-        public IActionResult Create() 
+        public IActionResult Create()
         {
             var categories = categoriesServices.GetCategories();
             CreateItemViewModel myModel = new CreateItemViewModel();
@@ -37,7 +37,7 @@ namespace WebApplication1.Controllers
         {
             try
             {
-                if (file != null) 
+                if (file != null)
                 {
                     //1.Change fileName
                     string uniqueFileName = Guid.NewGuid().ToString() + System.IO.Path.GetExtension(file.FileName);
@@ -46,7 +46,7 @@ namespace WebApplication1.Controllers
                     string absolutePath = host.WebRootPath;
 
                     //3.Saving the file
-                    using (System.IO.FileStream fsOut = new System.IO.FileStream(absolutePath + "\\Images\\" + uniqueFileName, System.IO.FileMode.CreateNew)) 
+                    using (System.IO.FileStream fsOut = new System.IO.FileStream(absolutePath + "\\Images\\" + uniqueFileName, System.IO.FileMode.CreateNew))
                     {
                         file.CopyTo(fsOut);
                     }
@@ -60,7 +60,7 @@ namespace WebApplication1.Controllers
                 //"Message" it builds in realtime in memory
                 ViewBag.Message = "Item Successfully inserted in database";
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 ViewBag.Error = "Item wasn't inserted Successfully. Please check your inputs!";
             }
@@ -70,7 +70,7 @@ namespace WebApplication1.Controllers
             return View(data);
         }
 
-        public IActionResult List() 
+        public IActionResult List()
         {
             var list = itemsService.GetItems();
             return View(list);
@@ -79,6 +79,35 @@ namespace WebApplication1.Controllers
         {
             var myItem = itemsService.GetItem(id);
             return View(myItem);
+        }
+
+        [HttpPost]
+        public IActionResult Search(string keyword) 
+        {
+            if (string.IsNullOrEmpty(keyword)) 
+            {
+                return RedirectToAction("List");
+            }
+            var list = itemsService.Search(keyword);
+            return View("List",list);
+        }
+
+        [HttpGet]
+        public IActionResult Delete(int id) 
+        {
+            try
+            {
+                itemsService.DeleteItem(id);
+                //ViewBag will not work here beacause ViewBag is lost when there is a redirection
+                //TempData survives redirection (up to 1 redirection)
+                TempData["message"] = "Item has been deleted";
+                return RedirectToAction("List");
+            }
+            catch (Exception ex) 
+            {
+                TempData["error"] = "Item has not been deleted";
+            }
+            return RedirectToAction("List");
         }
     }
 }
