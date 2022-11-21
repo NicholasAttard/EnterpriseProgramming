@@ -13,7 +13,7 @@ namespace DataAccess.Context
     //add-migration <name> ShoppingCartContext
     //update-database
 
-    public class ShoppingCartContext: IdentityDbContext
+    public class ShoppingCartContext: IdentityDbContext<CustomUser>
     {
         public ShoppingCartContext(DbContextOptions<ShoppingCartContext> options)
                : base(options)
@@ -21,8 +21,6 @@ namespace DataAccess.Context
         }
 
         public DbSet<Item> Items { get; set; } //an abstraction of the tables therefore plural name
-        public DbSet<Category> Categories { get; set; }
-
-
+        public DbSet<Category> Categories { get; set; } 
     }
 }
