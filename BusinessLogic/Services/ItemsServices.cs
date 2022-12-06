@@ -73,5 +73,22 @@ namespace BusinessLogic.Services
         {
             return GetItems().SingleOrDefault(x => x.Id == id);
         }
+
+        public void EditItem(int id,CreateItemViewModel updatedItem)
+        {
+            ir.EditItem
+                (
+                    new Domain.Models.Item()
+                    {
+                        Id = id,
+                        CategoryId = updatedItem.CategoryId,
+                        Description = updatedItem.Description,
+                        Name = updatedItem.Name,
+                        PhotoPath = updatedItem.PhotoPath,
+                        Price = updatedItem.Price
+                    }
+                );
+
+        }   
     }
 }

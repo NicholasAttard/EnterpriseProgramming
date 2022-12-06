@@ -66,10 +66,21 @@ namespace WebApplication1
 
             //We are instructint the clr so that when it comes across ICategoryRepository(in the contructor), it should initialise
             //the class declared after the comma (CategoriesFileRepositpries)
-            FileInfo fi = new FileInfo(@"C:\EnterpriseProgramming\EnterpriseProgramming\WebApplication1\Data\categories.txt");
+            //FileInfo fi = new FileInfo(@"C:\EnterpriseProgramming\EnterpriseProgramming\WebApplication1\Data\categories.txt");
+
+            string approach = Configuration.GetSection("approach").Value;
+            if (approach == "db")
+            {
+                services.AddScoped<ICategoriesRepository, CategoriesRepository>();
+            }
+            else 
+            {
+                FileInfo fi = new FileInfo(@"C:\EnterpriseProgramming\EnterpriseProgramming\WebApplication1\Data\categories.txt");
+                services.AddScoped<ICategoriesRepository, CategoriesFileRepository>(x => new CategoriesFileRepository(fi));
+            }
 
             //services.AddScoped<ICategoriesRepository, CategoriesRepository>();
-            services.AddScoped<ICategoriesRepository, CategoriesFileRepository>(x=> new CategoriesFileRepository(fi));
+            //services.AddScoped<ICategoriesRepository, CategoriesFileRepository>(x=> new CategoriesFileRepository(fi));
             services.AddScoped<CategoriesServices>();
         }
 
